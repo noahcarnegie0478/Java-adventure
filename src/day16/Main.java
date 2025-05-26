@@ -3,14 +3,66 @@ import java.util.*;
 
 
 public class Main {
-	public static void main(String[] args) {
-		ArrayList<Integer> arrayA = new ArrayList<>(Arrays.asList(5,4,1,2,6,5,1)) ;
-		ArrayList<Integer> arrayB = new ArrayList<>(Arrays.asList(2)) ;
+	
+	public static ArrayList<Integer> binaryGenerate( int value) {
+		ArrayList<Integer> resultList = new ArrayList<Integer>();
+		do {
+			if (value % 2 == 0 ) {
+				resultList.add(0,0);			
+			}
+			else {
+				resultList.add(0,1);
+			}
+			value = value / 2 ;
+
+		}while (value > 0);
+		printArray(resultList, "resultList: ");
 		
-		int result = Solution(arrayA, arrayB);
-		System.out.println(result);
+		return resultList;
 		
 	}
+
+	public static int lookingForBestSum( ArrayList<Integer> array) {
+		int count = 0;
+		ArrayList<Integer> countList = new ArrayList<Integer>(); 
+		for (int i =0 ; i < array.size(); i++) {
+			if (array.get(i) != 1) {
+				count++;
+			} else {
+				if ( count != 0) {
+					countList.add(count);
+					count = 0;
+				}
+			}
+		}
+		if (countList.size() == 0) {
+			return 0;
+		}
+		int maxNumber = Collections.max(countList);
+		
+		System.out.println(maxNumber);
+		return maxNumber;
+	}
+	public static int exerciseSolution1(int number) {
+		int result = lookingForBestSum(binaryGenerate(number)); 
+		return result;
+	}
+
+	
+	public static void main(String[] args) {
+	
+		//exercise 1
+		exerciseSolution1(515);
+	
+		//exercise 2
+		ArrayList<Integer> arrayA = new ArrayList<>(Arrays.asList(5,4,1,2,6,5,1)) ;
+		ArrayList<Integer> arrayB = new ArrayList<>(Arrays.asList(2)) ;
+
+		
+	}
+	
+	
+	/////////////////////////////////////// Exercise 2 /////////////////////////////////////////////
 	
 	public static int Solution(ArrayList<Integer> arrayA, ArrayList<Integer> arrayB ) {
 		if ( arrayA.size() > arrayB.size() * 6 || arrayB.size() >  arrayA.size() * 6) {
