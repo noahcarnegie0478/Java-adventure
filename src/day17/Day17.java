@@ -4,7 +4,47 @@ import java.util.*;
 public class Day17 {
 	
 	//exercise 1
+public static int exerciseOneSolution(ArrayList<Integer> array, int left, int right) {
+		
+		int result = 0;
+		HashMap<Integer, Integer> leftAndRight = new HashMap<>();
+		//make collection
+		for (int i = 0; i < array.size(); i++) {
+			
+			if (array.get(i) == left | array.get(i) == right) {
+				if (leftAndRight.get(left) != 0 || leftAndRight.get(right) != 0) {
+					checkNative(left, right, array);
+					
+				}
+			}
+			
+			
+			
+		}
+		
+		
+		//filter
+		
+		
+		return result;
+	}
 	
+	
+	public static int checkNative(int left, int right, ArrayList<Integer> array) {
+		ArrayList<Integer> newArray = new ArrayList<>(Math.max(right,left) + 1);
+		int result = -1;
+		int i = Math.min(right, left);
+		int j = 0;
+		
+		do {
+			
+			
+			
+		} while (i < Math.max(right, left) + 1);
+		
+		return result;
+		
+	}
 	
 	
 	
@@ -40,6 +80,15 @@ public class Day17 {
 		//[2, 1, 4, 3, 2, 1, 1, 4]
 		//L = 2 and R = 4, 
 		//expected output  = 3
+		
+		ArrayList<Integer> exerciseOneArray = new ArrayList<Integer>(Arrays.asList(2, 1, 4, 3, 2, 1, 1, 4));
+		
+		int leftNumber = 2;
+		int rightNumber = 4;
+		
+		int resultExOne = exerciseOneSolution(exerciseOneArray, leftNumber, rightNumber);
+		
+		
 		
 		
 		
