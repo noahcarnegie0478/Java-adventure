@@ -6,6 +6,15 @@ public class Day20 {
 		BE8Root root = new BE8Root();
 		BE8Tree node = new BE8Tree();
 		TreeService treeService = new TreeService();
+		//				52
+		//				/ \
+		//			60	    75
+		//			/|\     /|\
+		//		 90 87 61 55 24 26
+		//			|
+		//			5
+		//
+		
 		node.value = 52;
 		root.root = node;
 		node = new BE8Tree();
