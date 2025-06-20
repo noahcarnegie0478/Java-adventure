@@ -67,8 +67,14 @@ public class TreeService {
 		return null;
 	}
 	public void insertThroughRecursion(BE8Tree node,Integer insertValue,Integer childrenValue) {
-		BE8Tree foundValue = findByRecursion(node, new ArrayList<BE8Tree>(), childrenValue);
-		foundValue.children.add(new BE8Tree(insertValue));
+		if (node.value == childrenValue) {
+			node.children.add(new BE8Tree(insertValue));
+			
+		}
+		else {
+			BE8Tree foundValue = findByRecursion(node, new ArrayList<BE8Tree>(), childrenValue);
+			foundValue.children.add(new BE8Tree(insertValue));
+		}
 	}
 	
 
