@@ -49,16 +49,20 @@ public class TreeService {
 		
 		
 	}
-	public BE8Tree findByRecursion(BE8Tree node, ArrayList<BE8Tree> stack, Integer value ) {
+	public BE8Tree findByRecursion(BE8Tree node, 
+//			ArrayList<BE8Tree> stack, 
+			Integer value ) {
 		if (node.children.isEmpty()) {
 			return null;
 		}
 		for (BE8Tree nodeChild : node.children) {
-			stack.add(nodeChild);
+//			stack.add(nodeChild);
 			if (nodeChild.value == value) {
 				return nodeChild;
 			}else {
-				BE8Tree result = findByRecursion(nodeChild, stack, value);
+				BE8Tree result = findByRecursion(nodeChild,
+//						stack, 
+						value);
 				if (result != null) {
 					return result;
 				}
@@ -72,7 +76,9 @@ public class TreeService {
 			
 		}
 		else {
-			BE8Tree foundValue = findByRecursion(node, new ArrayList<BE8Tree>(), childrenValue);
+			BE8Tree foundValue = findByRecursion(node, 
+//					new ArrayList<BE8Tree>(), 
+					childrenValue);
 			foundValue.children.add(new BE8Tree(insertValue));
 		}
 	}
