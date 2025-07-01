@@ -52,8 +52,7 @@ public class TreeService {
 	public BE8Tree findByRecursion(BE8Tree node, Integer value ) {
 		if (node == null ) return null;
 		for (BE8Tree nodeChild : node.children) {
-				BE8Tree result = findByRecursion(nodeChild,
-						value);
+				BE8Tree result = findByRecursion(nodeChild,value);
 				if (result != null) return result;
 				
 		}
