@@ -52,7 +52,7 @@ public BE8Node bstBuild(int[] array) {
 //	System.out.println("parent: " + root.value);
 //	if (root.left != null) System.out.println("left: " + root.left.value);
 //	if (root.right != null) System.out.println("right: " + root.right.value);
-	service.printByRecursion(root);
+	
 	System.out.println("-------------------------------- after all ---------------------------");
 	return root;
 }
@@ -209,6 +209,15 @@ private BE8Node nodeIsMorethanLeftAndRight(BE8Node node) {
 	System.out.println("---------------------after swap -------------------------------");
 	return node;
 	
+}
+public void printByRecursion(BE8Node node) {
+	if (node != null)  {
+		printByRecursion(node.left);
+		printByRecursion(node.right);
+		System.out.println("Parent: " + node.value);
+		if (node.left != null) System.out.println("Children leftside: " + node.left.value); 
+		if (node.right != null) System.out.println("Children rightside: " + node.right.value);  
+	}
 }
 
 

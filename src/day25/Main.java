@@ -24,6 +24,7 @@ public class Main {
 		int[] nodes = {1,5,6,3,8,9,10,23,4,2};
 //		int[] nodes = {5,3,4};
 		BE8Node root = service.bstBuild(nodes);
+		service.printByRecursion(root);
 		
 //		BE8Node node =  service.bstBuild(nodes);
 //		service2.printByRecursion(node);
