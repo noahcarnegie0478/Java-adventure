@@ -21,7 +21,7 @@ public class Main {
 //		service.findImbalance(root.root,root.root );
 //		service.printByRecursion(root.root);
 		
-		int[] nodes = {1,5,6,3,8,9,10,23,4,2};
+		int[] nodes = {1,5,6,3,8,9,10,23,2,4,7};
 //		int[] nodes = {5,3,4};
 		BE8Node root = service.bstBuild(nodes);
 		service.printByRecursion(root);

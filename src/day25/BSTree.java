@@ -46,14 +46,6 @@ public BE8Node bstBuild(int[] array) {
 		root = insertIntoTree(root,i);
 		root = balanceBSTree(root, null);
 	}
-	
-//	service.printByRecursion(root);
-	System.out.println("-------------------------------- after all ---------------------------");
-//	System.out.println("parent: " + root.value);
-//	if (root.left != null) System.out.println("left: " + root.left.value);
-//	if (root.right != null) System.out.println("right: " + root.right.value);
-	
-	System.out.println("-------------------------------- after all ---------------------------");
 	return root;
 }
 	
@@ -68,37 +60,28 @@ private BE8Node insertIntoTree(BE8Node node, int value) {
 	else if (node.value > value) {
 		node.left = insertIntoTree(node.left, value);
 	}
-	//điều kiện của insert là: 
-	//value bé hơn node thì qua trái
-	//value lớn hơn node thì qua phải
-	//nó sẽ đi đến khi nào mà nó gặp được tận cùng thì nó sẽ gắn giá trị ở đó
-	//sau đó đến balance:
 	return node;
-	
-	
 	
 }
 private BE8Node balanceBSTree(BE8Node node,BE8Node parent ) {
-	//điều kiện của balance là: 
-	//Node khác null, nếu bằng null return node;
-	
 	if (node == null) return node;
-	
+	node.left = balanceBSTree(node.left, parent);
+	node.right = balanceBSTree(node.right, parent);
 	//check imbalance
 	int leftHeight = findHeight(node.left, node);
 	int rightHeight = findHeight(node.right, node);
+
 	if (Math.abs(leftHeight - rightHeight) > 1 ) {
 		System.out.println("-------------------------------- before balance ---------------------------");
 		System.out.println("parent: " + node.value);
-		if (node.left != null) System.out.println("left: " + node.left.value);
-		
-		if (node.right != null) System.out.println("right: " + node.right.value);
+		printByRecursion(node);
 		System.out.println("-------------------------------- before balance ---------------------------");
 		node = balanceTree(node, leftHeight, rightHeight, parent);
 	}
 	return node;
 }
 public BE8Node rotateToLeftSide(BE8Node node) {
+	
 	
 	if (node.right.right == null) {
 		 BE8Node toBeNode = node.right.left;
@@ -148,15 +131,19 @@ private int findHeight(BE8Node node, BE8Node parent ) {
 }
 private BE8Node balanceTree(BE8Node node, int left, int right,BE8Node parent ) {
 	BE8Node swap = node;
-	//nếu lệch trái, xoay phải
-	if (left < right) node = rotateToLeftSide(node);
 	//nếu lệch phải, xoay trái
+	
+	if (left < right) {
+		 node = rotateToLeftSide(node);
+		 left++;
+		 right--;
+		 
+	}
+	//nếu lệch trái, xoay phải
 	else node = rotateToRightSide(node);
 	
 	System.out.println("---------------------after balance -------------------------------");
-	System.out.println("parent: " + node.value);
-	System.out.println("left: " + node.left.value);
-	System.out.println("right: " + node.right.value);
+	printByRecursion(node);
 	System.out.println("---------------------after balance -------------------------------");
 	//nếu parent = null, balance xong parent = node.
 	if (parent == null) {return node;}
