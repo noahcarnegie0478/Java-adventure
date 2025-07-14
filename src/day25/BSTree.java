@@ -70,7 +70,6 @@ private BE8Node balanceBSTree(BE8Node node,BE8Node parent ) {
 	//check imbalance
 	int leftHeight = findHeight(node.left, node);
 	int rightHeight = findHeight(node.right, node);
-
 	if (Math.abs(leftHeight - rightHeight) > 1 ) {
 		System.out.println("-------------------------------- before balance ---------------------------");
 		System.out.println("parent: " + node.value);
