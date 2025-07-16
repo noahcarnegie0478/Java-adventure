@@ -5,13 +5,21 @@ import java.util.ArrayList;
 public class Day29 {
 	
 	public static void main(String[] args) {
-//		int[] days = {1,2,4,5,7,29,30};
-		int[] days = {1,3,4,6,8,9,10,18,19,26,27,29,30};
+		BSTree service = new BSTree();
+		//----------------- Ticket home work -----------------------------------------
+		int[] days = {1,2,4,5,7,29,30};
 		int result = solutionTickets(days);
-		System.out.println("result: " + result);
+		System.out.println("result: " + result);	
+		//----------------------------------------------------------------------------
 		
+		//------------------ Minimum hour home work ----------------------------------
+		int[] times = {6,7,8,2,1,4};
+		String minimumHour = solutionMinimumHour(times);
+		//----------------------------------------------------------------------------
 		
-		
+		int[] nodes = {1,5,6,3,8,9,10,23,2,4,7};
+//		BE8Node root = service.bstBuild(nodes);
+//		service.printByRecursion(root);
 	}
 	//Time = On Space = On
 	public static int solutionTickets(int[] array) { 
@@ -23,7 +31,7 @@ public class Day29 {
 		for (int i = 0; i < array.length; i++) {
 			if (array[i] <= maxOfRange) toBeSeven.add(array[i]);
 			else {
-				if (toBeSeven.get(1) + 6 >= array[i]) {
+				if ( toBeSeven.size() >= 2 && toBeSeven.get(1) + 6 >= array[i]) {
 					toBeSeven.remove(0);
 					maxOfRange = toBeSeven.get(0) + 6;
 					result = result + 2;
@@ -49,5 +57,7 @@ public class Day29 {
 		}
 		return result;
 	}
-
+	public static String solutionMinimumHour(int[] times) {
+		return "hours: 20:20:20";
+	}
 }
