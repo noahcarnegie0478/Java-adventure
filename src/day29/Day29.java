@@ -13,13 +13,11 @@ public class Day29 {
 		//----------------------------------------------------------------------------
 		
 		//------------------ Minimum hour home work ----------------------------------
-		int[] times = {6,7,8,2,1,4};
+		int[] times = {1,2,4,5,7,8};
 		String minimumHour = solutionMinimumHour(times);
-		//----------------------------------------------------------------------------
+		System.out.println("Final hour is: " + minimumHour);
 		
-		int[] nodes = {1,5,6,3,8,9,10,23,2,4,7};
-//		BE8Node root = service.bstBuild(nodes);
-//		service.printByRecursion(root);
+		//----------------------------------------------------------------------------
 	}
 	//Time = On Space = On
 	public static int solutionTickets(int[] array) { 
@@ -58,6 +56,27 @@ public class Day29 {
 		return result;
 	}
 	public static String solutionMinimumHour(int[] times) {
-		return "hours: 20:20:20";
+		BSTree service = new BSTree();
+		BE8Node root = service.bstBuild(times);
+		service.printByRecursion(root);
+		int[] countRight = {0};
+		int[] countLeft = {1};
+		service.insertArray(root.right, countRight, times);
+		service.insertArray(root.left, countLeft, times);
+		
+		if (countRight[0] < 6) {
+			times[1] = root.value;
+		}
+		else if (countLeft[0] < 5) {
+			times[0] = times[2];
+			times[2] = times[4];
+			times[4] = root.value;
+		}
+		
+		for (int i : times) {
+			System.out.println(i);
+		}
+		String mainHour = " " + times[0] +  times [1] + ":" + times[2] +  times [3] + ":" + times[4] +  times [5];
+		return mainHour;
 	}
 }

@@ -29,6 +29,22 @@ private BE8Node insertIntoTree(BE8Node node, int value, BE8Node parent) {
 	return node;
 	
 }
+
+public void insertArray(BE8Node node, int[] count, int[] mainArray ) {
+	if (node == null) return;
+	insertArray(node.right, count, mainArray);
+	int currentIndex = mainArray.length - 1 - count[0];
+	if (currentIndex > 0 ) {
+		mainArray[currentIndex] = node.value;
+		System.out.println("at index " + currentIndex + "time is equal " + mainArray[currentIndex]);
+		count[0] = count[0] + 2;
+	}
+	insertArray(node.left, count, mainArray);
+	
+}
+
+
+
 private BE8Node balanceBSTree(BE8Node node,BE8Node parent ) {
 	if (node == null) return node;
 	node.left = balanceBSTree(node.left, parent);
@@ -37,11 +53,6 @@ private BE8Node balanceBSTree(BE8Node node,BE8Node parent ) {
 	int leftHeight = findHeight(node.left, node);
 	int rightHeight = findHeight(node.right, node);
 	if (Math.abs(leftHeight - rightHeight) > 1 ) {
-		System.out.println("-------------------------------- before balance ---------------------------");
-		if (parent != null) System.out.println("node parent: " + parent.value );
-		System.out.println("node: " + node.value);
-		printByRecursion(node);
-		System.out.println("-------------------------------- before balance ---------------------------");
 		node = balanceTree(node,  parent);
 		
 	}
@@ -51,9 +62,7 @@ private BE8Node balanceTree(BE8Node node, BE8Node parent ) {
 	BE8Node swap = node;
 	if (node.hLeft < node.hRight) node = rotateToLeftSide(node);
 	else node = rotateToRightSide(node);
-	System.out.println("---------------------after balance -------------------------------");
-	printByRecursion(node);
-	System.out.println("---------------------after balance -------------------------------");
+
 	//nếu parent = null, balance xong parent = node.
 	if (parent == null) {return node;}
 	else {
@@ -62,10 +71,7 @@ private BE8Node balanceTree(BE8Node node, BE8Node parent ) {
 		}else {
 			parent.right = node;
 		}
-		
-		System.out.println("---------------------parent balance -------------------------------");
-		printByRecursion(parent);
-		System.out.println("---------------------parent balance -------------------------------");
+
 	}
 	return node;
 }
@@ -132,8 +138,6 @@ public void printByRecursion(BE8Node node) {
 		printByRecursion(node.left);
 		printByRecursion(node.right);
 		System.out.println("Parent: " + node.value);
-//		System.out.println("Parent left height: " + node.hLeft);
-//		System.out.println("Parent right height: " + node.hRight);
 		if (node.left != null) {
 			System.out.println("Children leftside: " + node.left.value);
 		}; 
