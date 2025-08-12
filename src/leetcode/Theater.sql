@@ -145,6 +145,8 @@ select * from customer;
 
 create index full_name_index on customer(Name);
 
+drop index full_name_index on customer;
+
 -- duration time 0.00036 sec / 0.000028 sec
 select * from customer where name = "Dang Pham";
 
