@@ -1,159 +1,81 @@
-CREATE database galaxy_theater;
+-- import this database to mysql server
+-- write FASTEST query for (OR MAKE IT FAST) :
+use cinema;
+create fulltext index ft_idx on film (name, country_code, type);
+-- 1 Show film over 100mins
+select * from film where length_min > 100;
+-- 2 Which film over average length of all films
+select * from film where length_min > (select avg(length_min) as avarage_duration from film);
+-- 3 Which film has name start with letter 't'
+select * from film where name like 't%';
+-- select * from film where match (name, country_code, type  ) against ('t*' in boolean mode );
+-- 4 Which film contain letter 'a'
+select * from film where name like '%a%' or country_code like '%a%' or type like '%a%';
+-- 5 How many film in US?
+select count(name) from film where country_code = 'US';
+-- 6 what is the longest, and shortest length of all film
+select max(length_min) as MaxLength, min(length_min) as MinLength from film;
+-- 7 Show unique film types of all film (NO DUPLICATE)
+select type as movie_type from film group by type;
+-- 8 What is the distance (in days) of the 1st and the last film
+-- note: maybe y thay la giua phim dau va phim cuoi cach nhau may ngay
+select datediff(max(start_time),min(start_time) ) as dayDiff from screening;
 
-use galaxy_theater;
+-- 9 Show all Screening Information including film name, room name, time of film "Tom&Jerry"
 
-create table film (
-Id int not null auto_increment,
-Name varchar(100) not null,
-Duration int not null,
-Gerne varchar(20) not null,
-Country char(2) not null,
-primary key (Id)
-);
+select screening.Id as screening_id,film.name as film, length_min as duration, start_time, room.name as room 
+from film inner join screening on film.id = screening.film_id inner join room on screening.room_id = room.id  
+where film.name = "Tom&Jerry";
 
-create table room (
-	Id int not null auto_increment,
-    Name varchar(20) not null,
-    primary key (Id)
-    
-);
+-- 10 show all screening in 2 day '2022-05-25' and '2022-05-25'
+select * from screening where start_time >= '2022-05-24 00:00:00' and start_time <=  '2022-05-25 23:59:59';
+-- 11. Show film which dont have any screening
+select film.id as id_from_film, film.name as title, screening.film_id as id_from_screening from film left join screening on film.id = screening.film_id where screening.film_id is null ;
+-- 12 Who book more than 1 seat in 1 booking
+select booking.customer_id, customer.first_name ,booking_id, count(booking_id) as seat_quantity from reserved_seat 
+inner join booking on booking.id = reserved_seat.booking_id 
+inner join customer on booking.customer_id = customer.id
+group by booking_id having count(booking_id) > 1  ;
+-- 13 Show room show more than 2 film in one day
+-- NOTE: trong 1 ngay , phong lap lai hon 2 lan. 
+select date(start_time) as day_time, room_id, count(room_id) as count_per_day 
+from screening group by day_time, room_id 
+having count_per_day > 2 order by day_time ;
+-- 14 which room show the least film ?
+-- NOTE: the amout of screening time per room, and the min of that amount
+select room_id, count(room_id) as show_time_quantity from screening group by room_id order by show_time_quantity limit 1; 
+-- 15 what film don't have booking
+select screening.film_id as film_id, film.name as title from screening
+left join booking on booking.screening_id = screening.id 
+inner join film on screening.film_id = film.id
+where booking.screening_id is null group by screening.film_id; ;
+-- 16 WHAT film have show the biggest number of room?
+-- note: find different room count that group by film
+select film_id ,name, count(distinct room_id) as number_of_diff_room from screening right join film on film.id = film_id group by film_id order by number_of_diff_room desc limit 1 ;
+-- 17 Show number of film that show in every day of week and order descending
+-- note: maybe y thay la so phim khac nhau moi ngay
+select date(start_time) as day, count(distinct film_id) as film_per_day from screening group by day order by film_per_day desc;
+-- 18 show total length of each film that showed in 28/5/2022
+-- note maybe y thay la phim do da duoc chieu bao nhieu tieng trong ca ngay 28/05/2022
+select film_id, count(film_id) as times, film.length_min,(film.length_min * count(film_id)) as total 
+from screening inner join film on film_id = film.id 
+where date(start_time) = '2022-05-28' group by film_id ;
+-- 19 What film has showing time above and below average show time of all film
 
-create table Screening (
-	Screening_id int not null auto_increment,
-    Film_id int not null,
-    Room_id int not null,
-    Constraint FK_film_id foreign key (Film_id) references film(Id),
-    constraint FK_room_id foreign key (Room_id) references room(Id),
-    primary key (Screening_id),
-    start_time datetime not null
-);
-
-create table seat (
-Seat_id int primary key not null auto_increment,
-Room_id int not null,
-constraint seat_of_room foreign key (Room_id) references room(Id),
-number int not null, 
-Seat_row Varchar(1),
-x float not null,
-y float not null,
-constraint position unique (Room_id, Seat_row, number),
-constraint location unique (Room_id,x,y)
-);
-
-
-create table customer (
-Id int primary key not null auto_increment,
-Name varchar(50) not null,
-Phone int
-);
-
-create table booking (
-Booking_id int primary key not null auto_increment,
-Customer_id	int not null,
-Screening_id int not null,
-Booking_time datetime not null,
-Total int not null,
-foreign key (Customer_id ) references customer(Id),
-foreign key (Screening_id) references Screening(Screening_id)
- );
-
-
-create table reserved_seat (
-rs_id int primary key not null auto_increment,	
-Booking_id int not null,
-Seat_id	int not null,
-price float not null,
-constraint unique_position unique (Booking_id, Seat_id),
-constraint FK_booking foreign key (Booking_id) references booking(Booking_id),
-constraint FK_seat foreign key (Seat_id) references seat(Seat_id) 
-);
-
--- error no foreign key consisted to room id : 4
-insert into Screening (Film_id, Room_id, start_time) value (2,4,"2025-10-11 8:00");
-alter table film add Check (Duration > 0);
--- error : duration could not pass the check because it is not over 0
-insert into film( Name, Duration, Gerne, Country) Value ("Movie D",	120,"Comedy","VN");
-insert into seat ( room_id, Seat_row, number,x, y) value (1,"A", 1,1,1), (1,"A", 5,1,3), (2,"G", 4,1,1), (3,"F", 6,2,1) ;
-insert into customer (Name, Phone) value ("Leslie", 01778500), ("Noah", 017721200),("Dung", 02132200);
-insert into booking (Customer_id,Screening_id,Booking_time,Total) value (1,2, "2025-10-11 8:00", 10), (1,3, "2025-10-11 8:00",20), (3,3, "2025-10-11 8:00",30), (2,3, "2025-10-11 8:00",40);
-insert into reserved_seat (Booking_id,Seat_id,price) value (9,5,10) , (10,6,20), (11,8, 10), (11, 7, 20), (12, 6, 20), (12, 7, 20);
-select * from seat;
-
-
--- data generated by AI for search purpose---
-INSERT INTO film (Name, Duration, Gerne, Country) VALUES
--- Horror (6)
-('Midnight Echo',       102, 'Horror',   'US'),
-('Shadows at Sea',       95, 'Horror',   'UK'),
-('Whispering Pines',    108, 'Horror',   'CA'),
-('Crimson Alley',       117, 'Horror',   'AU'),
-('The Hollow Line',      99, 'Horror',   'DE'),
-('Silent Passage',      104, 'Horror',   'JP'),
--- Romantic (3)
-('Spring Letters',      112, 'Romantic', 'FR'),
-('Moonlit Café',         93, 'Romantic', 'IT'),
-('Sky of Saigon',       106, 'Romantic', 'VN'),
--- Action (3)
-('Pulse Runner',        101, 'Action',   'US'),
-('Neon Crossfire',      114, 'Action',   'KR'),
-('Last Stand in Perth', 120, 'Action',   'AU');
-
-select * from film;
-
--- home work --- apply index to better find the gerne of movies
-create index gerne_idx on film (gerne);
--- duration fetch 0.00070 second
-select * from film where gerne = "Horror";
--- drop index 
-drop index gerne_idx on film ;
--- duration fetch 0.00170 second -- slower than with index 40% in the small database
-select * from film where gerne = "Horror";
-
--- data generated by AI for searching purpose --- 
-INSERT INTO customer (Name, Phone) VALUES
-("Leslie Nguyen", 01778501),
-("Noah Tran", 017721201),
-("Dung Le", 02132201),
-("Ava Pham", 01778502),
-("Liam Hoang", 017721202),
-("Emma Vo", 02132202),
-("Mia Do", 01778503),
-("Ethan Bui", 017721203),
-("Olivia Dang", 02132203),
-("Lucas Phan", 01778504),
-("Sophie Truong", 017721204),
-("Jack Vu", 02132204),
-("An Nguyen", 01778505),
-("Bao Tran", 017721205),
-("Chi Le", 02132205),
-("Dang Pham", 01778506),
-("Giang Hoang", 017721206),
-("Hanh Vo", 02132206),
-("Khai Do", 01778507),
-("Linh Bui", 017721207),
-("Minh Dang", 02132207),
-("Nam Phan", 01778508),
-("Oanh Truong", 017721208),
-("Phuc Vu", 02132208),
-("Quang Nguyen", 01778509),
-("Trang Tran", 017721209),
-("Uyen Le", 02132209),
-("Vy Pham", 01778510);
-
-
-select * from customer;
-
-create index full_name_index on customer(Name);
-
-drop index full_name_index on customer;
-
--- duration time 0.00036 sec / 0.000028 sec
-select * from customer where name = "Dang Pham";
-
-
-
-
-
-
-
-
+-- 20 what room have least number of seat?
+select room_id,name,count(number) as amount  from seat 
+inner join room on room_id = room.id 
+group by room_id order by amount limit 1 ;
+-- 21 what room have number of seat bigger than average number of seat of all rooms
+-- note: avarage of seat of all room - get amount per room an compare
+select room_id,count(number) as amount from seat 
+group by room_id 
+having count(number) > 
+(select avg(amount) from (select room_id,count(number) as amount from seat 
+group by room_id ) as second_table);
+-- 22 Ngoai nhung seat mà Ong Dung booking duoc o booking id = 1 thi ong CÓ THỂ (CAN) booking duoc nhung seat nao khac khong?
+-- 23 Show Film with total screening and order by total screening. BUT ONLY SHOW DATA OF FILM WITH TOTAL SCREENING > 10
+-- 24 TOP 3 DAY OF WEEK based on total booking
+-- 25 CALCULATE BOOKING rate over screening of each film ORDER BY RATES.
+-- 26 CONTINUE Q15 -> WHICH film has rate over/below/equal average ?.
+-- 27 TOP 2 people who enjoy the least TIME (in minutes) in the cinema based on booking info - only count who has booking info (example : Dũng book film tom&jerry 4 times -> Dũng enjoy 90 mins x 4)
